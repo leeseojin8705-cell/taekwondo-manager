@@ -331,7 +331,12 @@ function NewStudentContent() {
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to load new student setup data.");
+      const message = err instanceof Error ? err.message : String(err);
+      const hint =
+        !message || message.includes("env") || message.includes("SUPABASE")
+          ? " Vercel에 NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY 넣고 Redeploy 했는지 확인하세요."
+          : ` (${message.slice(0, 120)}${message.length > 120 ? "…" : ""})`;
+      setError("Failed to load new student setup data." + hint);
     } finally {
       setLoading(false);
     }
